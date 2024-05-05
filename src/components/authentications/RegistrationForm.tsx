@@ -27,6 +27,7 @@ const RegistrationForm = () => {
       console.error("Registration failed", error);
     }
     setLoading(false);
+    form.resetFields()
   };
 
   return (

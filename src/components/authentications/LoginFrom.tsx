@@ -6,7 +6,7 @@ import axios from "axios";
 
 const LoginFrom: React.FC = () => {
   const navigate = useNavigate();
-
+const [form] = Form.useForm()
   const loginForm = async (d: Record<string, any>) => {
     const payload = { ...d };
     console.log(d);
@@ -16,6 +16,7 @@ const LoginFrom: React.FC = () => {
     } catch (error) {
       console.log(error);
     }
+    form.resetFields()
   };
   return (
     <div>
@@ -23,7 +24,7 @@ const LoginFrom: React.FC = () => {
         <Col sm={6}></Col>
         <Col xs={24} sm={12}>
           <Card className=" mt-24" hoverable>
-            <Form onFinish={loginForm} layout="vertical">
+            <Form form={form} onFinish={loginForm} layout="vertical">
               <Form.Item
                 label="Username"
                 name="username"
