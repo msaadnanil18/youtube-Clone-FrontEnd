@@ -8,17 +8,23 @@ import {
   Space,
   MenuProps,
   Drawer,
+  Grid,
 } from "antd";
+const { useBreakpoint } = Grid;
 import { useNavigate } from "react-router-dom";
 import {
   UserOutlined,
   UnorderedListOutlined,
   LogoutOutlined,
   VideoCameraAddOutlined,
+  YoutubeFilled,
+  LoginOutlined,
+  UserAddOutlined,
 } from "@ant-design/icons";
 import UploadVideoForm from "../videos/UploadVideoForm";
 
 const NavBar = () => {
+  const screen = useBreakpoint();
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
   const menuStyle = {
@@ -31,34 +37,48 @@ const NavBar = () => {
     {
       label: <div onClick={() => navigate("/login-user")}>Login User</div>,
       key: "0",
+      icon:<LoginOutlined style={{ fontSize: 15 }}  />
     },
     {
       label: (
         <div onClick={() => navigate("/resgister-user")}>Resgister User</div>
       ),
       key: "1",
+      icon:<UserAddOutlined style={{ fontSize: 15 }} />
     },
+    {
+        label: (
+          <div onClick={() => setOpen(true)}>Resgister User</div>
+        ),
+        icon:<VideoCameraAddOutlined style={{ fontSize: 15 }} />,
+        key: "2",
+      },
   ];
 
   return (
     <>
-      {open && (<UploadVideoForm open={open} setOpen={setOpen} />)}
+      {open && <UploadVideoForm open={open} setOpen={setOpen} />}
 
       <Menu mode="horizontal" style={menuStyle}>
         <Menu.Item key="icon" disabled>
-          <UnorderedListOutlined
-            style={{ padding: 14, fontSize: 27, color: "#8a8686" }}
+          <UnorderedListOutlined style={{ padding: 14, fontSize: 27 }} />
+          <YoutubeFilled
+            style={{ padding: 14, fontSize: 27, color: "red", margin: 0 }}
+            onClick={() => navigate("/")}
           />
         </Menu.Item>
+
         <Menu.Item key="name" disabled></Menu.Item>
+
         <Menu.Item key="logout" disabled style={{ marginLeft: "auto" }}>
-          <Button
-            type="link"
-            icon={<VideoCameraAddOutlined />}
+            {screen.sm?    <Button
+            className="mx-10"
             onClick={() => setOpen(true)}
-          />
-        </Menu.Item>
-        <Menu.Item key="logout" disabled style={{ marginLeft: "auto" }}>
+            type="link"
+            icon={<VideoCameraAddOutlined style={{ fontSize: 23 }} />}
+          />: null }
+       
+
           <Button type="link" icon={<LogoutOutlined />} danger>
             Logout
           </Button>

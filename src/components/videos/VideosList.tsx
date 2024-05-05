@@ -4,10 +4,47 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Videos } from "../../types";
 
-const VideosList = () => {
+const VideosList = ({
+  mute = false,
+  size = {
+    xs: 24,
+    sm: 8,
+    CardHeight: 410,
+    videoHeight: 280,
+    imageHeignt: 280,
+    videoWidth: "100%",
+    imageWidth: "100%",
+    innerCardRowCol: { sm: { imgSm: 24, descriptionSm: 24 } },
+  },
+}: {
+  mute?: boolean;
+  size?: {
+    xs: number;
+    sm: number;
+    CardHeight: number;
+    videoHeight: number;
+    imageHeignt: number;
+    videoWidth: any;
+    imageWidth: any;
+    innerCardRowCol: {
+      xs?: number;
+      sm: { imgSm: number; descriptionSm: number };
+    };
+  };
+  cardSize?: {};
+}) => {
   const navigate = useNavigate();
   const [fetchData, setFetchData] = React.useState<Videos[]>([]);
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [isPlayingIndex, setIsPlayingIndex] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+
+  const handleMouseEnter = (index: any) => {
+    setIsPlayingIndex(index);
+  };
+
+  const handleMouseLeave = () => {
+    setIsPlayingIndex(null);
+  };
   const fetchVideoList = async () => {
     setLoading(true);
     try {
@@ -30,18 +67,48 @@ const VideosList = () => {
         </div>
       ) : (
         <Row gutter={[16, 16]}>
-          {fetchData.map((item: Videos, index) => (
-            <Col xs={24} sm={8}>
+          {fetchData.map((item, index) => (
+            <Col key={index} xs={size?.xs} sm={size?.sm}>
               <Card
-              key={index}
-                onClick={() => navigate(`/video-play/${item._id}`)}
-                title={<small>{item.title}</small>}
+                loading={loading}
+                bordered={false}
+                onMouseEnter={() => handleMouseEnter(index)}
+                onMouseLeave={handleMouseLeave}
+                onClick={() => {
+                  navigate(`/video-play/${item._id}`);
+                }}
+                style={{ height: size.CardHeight }}
               >
-                <img
-                  src={item.thumbnail}
-                  style={{ height: 280, width: "100%" }}
-                />
-                <Card.Meta description={item.description}></Card.Meta>
+                <Row>
+                  <Col sm={size.innerCardRowCol.sm.imgSm}>
+                    {isPlayingIndex === index ? (
+                      <video
+                        src={item.videoFile}
+                        style={{
+                          height: size.videoHeight,
+                          width: size.videoWidth,
+                        }}
+                        autoPlay={true}
+                        muted={mute}
+                      />
+                    ) : (
+                      <img
+                        src={item.thumbnail}
+                        style={{
+                          height: size.imageHeignt,
+                          width: size.imageWidth,
+                          borderRadius: 20,
+                        }}
+                      />
+                    )}
+                  </Col>
+                  <Col sm={size.innerCardRowCol.sm.descriptionSm}>
+                    <Card.Meta
+                      title={<small>{item.title}</small>}
+                      description={item.description}
+                    />
+                  </Col>
+                </Row>
               </Card>
             </Col>
           ))}
