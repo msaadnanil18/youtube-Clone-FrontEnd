@@ -10,7 +10,6 @@ const Index = () => {
   return (
     <div>
       <NavBar />
-
       <Routes>
         <Route path="/" element={<VideosList />} />
         <Route path="/login-user" element={<LoginFrom />} />
